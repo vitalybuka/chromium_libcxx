@@ -44,6 +44,10 @@
 #   define _LIBCPP_ASSERT(x, m) _LIBCPP_ASSERT_IMPL(x, m)
 #endif
 
+#ifdef _LIBCPP_ASSERT_TRAP
+#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : __builtin_trap())
+#endif
+
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 struct _LIBCPP_TEMPLATE_VIS __libcpp_debug_info {

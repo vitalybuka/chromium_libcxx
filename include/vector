@@ -293,6 +293,11 @@ erase_if(vector<T, Allocator>& c, Predicate pred);    // C++20
 #pragma GCC system_header
 #endif
 
+#pragma push_macro("_LIBCPP_ASSERT")
+#ifdef _LIBCPP_ASSERT_VECTOR
+#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : __builtin_trap())
+#endif
+
 _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
@@ -989,8 +994,10 @@ template <class _Tp, class _Allocator>
 void
 vector<_Tp, _Allocator>::__vallocate(size_type __n)
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n > max_size())
         this->__throw_length_error();
+#endif
     this->__begin_ = this->__end_ = __alloc_traits::allocate(this->__alloc(), __n);
     this->__end_cap() = this->__begin_ + __n;
     __annotate_new(0);
@@ -1023,8 +1030,10 @@ typename vector<_Tp, _Allocator>::size_type
 vector<_Tp, _Allocator>::__recommend(size_type __new_size) const
 {
     const size_type __ms = max_size();
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__new_size > __ms)
         this->__throw_length_error();
+#endif
     const size_type __cap = capacity();
     if (__cap >= __ms / 2)
         return __ms;
@@ -1564,8 +1573,10 @@ template <class _Tp, class _Allocator>
 typename vector<_Tp, _Allocator>::reference
 vector<_Tp, _Allocator>::at(size_type __n)
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n >= size())
         this->__throw_out_of_range();
+#endif
     return this->__begin_[__n];
 }
 
@@ -1573,8 +1584,10 @@ template <class _Tp, class _Allocator>
 typename vector<_Tp, _Allocator>::const_reference
 vector<_Tp, _Allocator>::at(size_type __n) const
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n >= size())
         this->__throw_out_of_range();
+#endif
     return this->__begin_[__n];
 }
 
@@ -2530,8 +2543,10 @@ template <class _Allocator>
 void
 vector<bool, _Allocator>::__vallocate(size_type __n)
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n > max_size())
         this->__throw_length_error();
+#endif
     __n = __external_cap_to_internal(__n);
     this->__begin_ = __storage_traits::allocate(this->__alloc(), __n);
     this->__size_ = 0;
@@ -2569,8 +2584,10 @@ typename vector<bool, _Allocator>::size_type
 vector<bool, _Allocator>::__recommend(size_type __new_size) const
 {
     const size_type __ms = max_size();
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__new_size > __ms)
         this->__throw_length_error();
+#endif
     const size_type __cap = capacity();
     if (__cap >= __ms / 2)
         return __ms;
@@ -3044,8 +3061,10 @@ template <class _Allocator>
 typename vector<bool, _Allocator>::reference
 vector<bool, _Allocator>::at(size_type __n)
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n >= size())
         this->__throw_out_of_range();
+#endif
     return (*this)[__n];
 }
 
@@ -3053,8 +3072,10 @@ template <class _Allocator>
 typename vector<bool, _Allocator>::const_reference
 vector<bool, _Allocator>::at(size_type __n) const
 {
+#ifndef _LIBCPP_NOCHECK_VECTOR
     if (__n >= size())
         this->__throw_out_of_range();
+#endif
     return (*this)[__n];
 }
 
@@ -3411,5 +3432,7 @@ erase_if(vector<_Tp, _Allocator>& __c, _Predicate __pred) {
 _LIBCPP_END_NAMESPACE_STD
 
 _LIBCPP_POP_MACROS
+
+#pragma pop_macro("_LIBCPP_ASSERT")
 
 #endif // _LIBCPP_VECTOR
